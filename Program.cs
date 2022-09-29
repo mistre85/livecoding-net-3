@@ -1,106 +1,20 @@
-﻿
+﻿using System.Data.SqlClient;
 
-StreamReader fileLibri = File.OpenText("libri.txt");
-List<Libro> listaLibriValidi = new List<Libro>();
-fileLibri.ReadLine();
+using System.Data.SqlClient;
 
-while (!fileLibri.EndOfStream)
-{
-    string riga = fileLibri.ReadLine();
+string stringaDiConnessione = "Data Source=localhost;Initial Catalog=db-videogames;Integrated Security=True";
 
-    string[] split = riga.Split(',');
-
-    try
-    {
-        string titolo = split[0];
-        string autore = split[1];
-        int anno = int.Parse(split[2]);
-        titolo = titolo.Replace("- ", "");
-        Libro libro = new Libro(titolo, autore, anno);
-        listaLibriValidi.Add(libro);
-        Console.WriteLine("Libro {0} importato correttamente", titolo);
-
-    }
-    catch (IndexOutOfRangeException)
-    {
-        Console.WriteLine("Libro non valido -->" + riga);
-    }
-
-    
-}
-
-fileLibri.Close();
+SqlConnection connessioneSql = new SqlConnection(stringaDiConnessione);
 
 try
 {
-    StreamWriter libriWriter = File.CreateText("Libri Preferiti Bello.txt");
-
-    libriWriter.WriteLine("Libri preferiti formato bello");
-
-    foreach (Libro libro in listaLibriValidi)
-    {
-        Console.WriteLine("Salvataggio {0}", libro.titolo);
-        libriWriter.WriteLine();
-        libriWriter.WriteLine(libro.ToString());
-    }
-
-    libriWriter.Close();
-
-}catch(Exception e)
-{
-    Console.WriteLine("Qualcosa è andato storto: {0}", e.Message);
+    connessioneSql.Open();
 }
-
-
-
-
-
-
-
-
-
-
-//string path = "../../../example.txt";
-
-//if (File.Exists(path))
-//{
-//    Creo un file
-//   StreamWriter file = new StreamWriter(path, true);
-
-//    scrivo le mie linee di testo
-//    string testoUtente = Console.ReadLine();
-//    file.WriteLine(testoUtente);
-
-//    chiudo il mio file
-//    file.Close();
-
-//}
-
-
-//// Open the file to read from.
-//StreamReader file = File.OpenText("../../../example.txt");
-
-//while (!file.EndOfStream)
-//{
-//    string riga = file.ReadLine();
-//    Console.WriteLine(riga);
-//}
-
-/////altre 
-
-//file.Close();
-
-
-//if (File.Exists("../../../example.txt"))
-//{
-//    string[] lineeDelFile = File.ReadAllLines("../../../example.txt");
-
-//    foreach (string linea in lineeDelFile)
-//    {
-//        Console.WriteLine(linea);
-//    }
-//}
-//else
-//{
-//    Console.WriteLine("il file example non esiste");
-//}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.ToString());
+}
+finally
+{
+    connessioneSql.Close();
+}
